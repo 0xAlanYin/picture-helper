@@ -15,8 +15,9 @@
 
     <view class="compress-section">
       <view class="slider-section">
-        <text class="slider-text">压缩比例：{{compressionRatio}}%</text>
-        <slider bindchanging="onSliderChange" value="{{compressionRatio}}" min="1" max="100" show-value></slider>
+        <text class="slider-text">压缩质量：{{compressionRatio}}%</text>
+        <text class="slider-tip">（质量越高，压缩后的图片越清晰，文件越大）</text>
+        <slider bindchange="onSliderChange" value="{{compressionRatio}}" min="10" max="90" show-value></slider>
       </view>
 
       <view class="button-group">
