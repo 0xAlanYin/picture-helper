@@ -1,0 +1,28 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="header">
+    <text class="title">图片助手</text>
+  </view>
+  
+  <view class="grid">
+    <view class="grid-item" bindtap="navigateToCompress">
+      <text class="grid-icon">📦</text>
+      <text class="grid-text">图片压缩</text>
+    </view>
+    
+    <view class="grid-item" bindtap="navigateToRemoveBg">
+      <text class="grid-icon">✂️</text>
+      <text class="grid-text">抠图去背景</text>
+    </view>
+    
+    <view class="grid-item" bindtap="navigateToRecognition">
+      <text class="grid-icon">🔍</text>
+      <text class="grid-text">图片识别</text>
+    </view>
+    
+    <view class="grid-item" bindtap="navigateToIDPhoto">
+      <text class="grid-icon">📸</text>
+      <text class="grid-text">证件照制作</text>
+    </view>
+  </view>
+</view>

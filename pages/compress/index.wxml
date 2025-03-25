@@ -1,0 +1,34 @@
+<!--pages/compress/index.wxml-->
+<view class="container">
+  <view class="upload-section" bindtap="chooseImage" wx:if="{{!tempImagePath}}">
+    <text class="upload-icon">📤</text>
+    <text class="upload-text">点击上传图片</text>
+  </view>
+
+  <block wx:if="{{tempImagePath}}">
+    <view class="preview-section">
+      <image class="preview-image" src="{{tempImagePath}}" mode="aspectFit"></image>
+      <view class="image-info">
+        <text>原始大小：{{originalSize}}KB</text>
+      </view>
+    </view>
+
+    <view class="compress-section">
+      <view class="slider-section">
+        <text class="slider-text">压缩比例：{{compressionRatio}}%</text>
+        <slider bindchanging="onSliderChange" value="{{compressionRatio}}" min="1" max="100" show-value></slider>
+      </view>
+
+      <view class="button-group">
+        <button class="btn" type="primary" bindtap="compressImage">压缩图片</button>
+        <button class="btn" bindtap="saveImage" wx:if="{{compressedImagePath}}">保存图片</button>
+        <button class="btn" bindtap="resetImage">重新选择</button>
+      </view>
+
+      <view class="result-info" wx:if="{{compressedImagePath}}">
+        <text>压缩后大小：{{compressedSize}}KB</text>
+        <text>压缩率：{{compressionRate}}%</text>
+      </view>
+    </view>
+  </block>
+</view>
