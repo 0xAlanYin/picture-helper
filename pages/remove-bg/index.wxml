@@ -1,2 +1,29 @@
 <!--pages/remove-bg/index.wxml-->
-<text>pages/remove-bg/index.wxml</text>
+<view class="container">
+  <view class="upload-section" bindtap="chooseImage" wx:if="{{!tempImagePath}}">
+    <text class="upload-icon">📤</text>
+    <text class="upload-text">点击上传图片</text>
+  </view>
+
+  <block wx:if="{{tempImagePath}}">
+    <view class="preview-section">
+      <view class="image-wrapper">
+        <text class="image-label">原始图片</text>
+        <image class="preview-image" src="{{tempImagePath}}" mode="aspectFit"></image>
+      </view>
+      
+      <view class="image-wrapper" wx:if="{{resultImagePath}}">
+        <text class="image-label">处理结果</text>
+        <image class="preview-image" src="{{resultImagePath}}" mode="aspectFit"></image>
+      </view>
+    </view>
+
+    <view class="button-group">
+      <button class="btn" type="primary" bindtap="removeBg" loading="{{isProcessing}}" disabled="{{isProcessing}}">
+        {{isProcessing ? '处理中...' : '去除背景'}}
+      </button>
+      <button class="btn" bindtap="saveImage" wx:if="{{resultImagePath}}">保存图片</button>
+      <button class="btn" bindtap="resetImage">重新选择</button>
+    </view>
+  </block>
+</view>
