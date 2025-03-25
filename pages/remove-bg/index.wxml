@@ -9,12 +9,12 @@
     <view class="preview-section">
       <view class="image-wrapper">
         <text class="image-label">原始图片</text>
-        <image class="preview-image" src="{{tempImagePath}}" mode="aspectFit"></image>
+        <image class="preview-image" src="{{tempImagePath}}" mode="aspectFit" show-menu-by-longpress></image>
       </view>
       
       <view class="image-wrapper" wx:if="{{resultImagePath}}">
         <text class="image-label">处理结果</text>
-        <image class="preview-image" src="{{resultImagePath}}" mode="aspectFit"></image>
+        <image class="preview-image result-image" src="{{resultImagePath}}" mode="aspectFit" show-menu-by-longpress></image>
       </view>
     </view>
 

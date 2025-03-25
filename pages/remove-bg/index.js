@@ -85,7 +85,7 @@ Page({
   },
 
   // 去除背景
-  removeBg() {
+  async removeBg() {
     if (!this.data.tempImagePath) {
       wx.showToast({
         title: '请先选择图片',
@@ -96,63 +96,97 @@ Page({
 
     this.setData({ isProcessing: true });
 
-    // 使用uploadFile发送请求
-    wx.uploadFile({
-      url: API_URL,
-      filePath: this.data.tempImagePath,
-      name: 'image_file',
-      header: {
-        'X-Api-Key': API_KEY
-      },
-      formData: {
-        size: 'auto'
-      },
-      success: (res) => {
-        if (res.statusCode === 200) {
-          // 将返回的图片数据保存为临时文件
-          const fs = wx.getFileSystemManager();
-          const tempFilePath = `${wx.env.USER_DATA_PATH}/temp_${Date.now()}.png`;
-          
-          try {
-            fs.writeFileSync(
-              tempFilePath,
-              res.data,
-              'binary'
-            );
+    try {
+      // 读取图片文件并转换为base64
+      const fileContent = wx.getFileSystemManager().readFileSync(this.data.tempImagePath, 'base64');
 
-            this.setData({
-              resultImagePath: tempFilePath
-            });
-
-            wx.showToast({
-              title: '处理成功',
-              icon: 'success'
-            });
-          } catch (err) {
-            console.error('保存文件失败：', err);
-            wx.showToast({
-              title: '处理失败',
-              icon: 'none'
-            });
-          }
-        } else {
-          console.error('API请求失败：', res);
-          wx.showToast({
-            title: '处理失败',
-            icon: 'none'
-          });
-        }
-      },
-      fail: (err) => {
-        console.error('去除背景失败：', err);
-        wx.showToast({
-          title: '处理失败',
-          icon: 'none'
+      // 调用remove.bg API
+      const res = await new Promise((resolve, reject) => {
+        wx.request({
+          url: API_URL,
+          method: 'POST',
+          header: {
+            'X-Api-Key': API_KEY,
+            'Content-Type': 'application/json'
+          },
+          responseType: 'arraybuffer',
+          data: {
+            image_file_b64: fileContent,
+            size: 'auto',
+            format: 'png'
+          },
+          success: resolve,
+          fail: reject
         });
-      },
-      complete: () => {
-        this.setData({ isProcessing: false });
+      });
+
+      if (res.statusCode === 200 && res.data) {
+        // 将返回的图片数据保存为临时文件
+        const tempFilePath = `${wx.env.USER_DATA_PATH}/temp_${Date.now()}.png`;
+        
+        try {
+          // 将二进制数据写入文件
+          wx.getFileSystemManager().writeFileSync(
+            tempFilePath,
+            res.data,
+            'binary'
+          );
+
+          // 验证图片是否有效
+          await new Promise((resolve, reject) => {
+            wx.getImageInfo({
+              src: tempFilePath,
+              success: () => {
+                this.setData({
+                  resultImagePath: tempFilePath
+                });
+                resolve();
+              },
+              fail: reject
+            });
+          });
+
+          wx.showToast({
+            title: '处理成功',
+            icon: 'success'
+          });
+        } catch (err) {
+          console.error('保存或验证图片失败：', err);
+          this.handleError('图片处理失败');
+        }
+      } else {
+        let errorMsg = '处理失败';
+        if (res.data) {
+          try {
+            // 尝试解析错误信息
+            const decoder = new TextDecoder('utf-8');
+            const errorText = decoder.decode(res.data);
+            const errorData = JSON.parse(errorText);
+            errorMsg = errorData.errors?.[0]?.title || '处理失败';
+          } catch (e) {
+            console.error('解析错误信息失败：', e);
+          }
+        }
+        throw new Error(errorMsg);
       }
+    } catch (err) {
+      console.error('去除背景失败：', err);
+      this.handleError(err.message || '处理失败');
+    } finally {
+      this.setData({ isProcessing: false });
+    }
+  },
+
+  // 统一错误处理
+  handleError(message) {
+    wx.showToast({
+      title: message,
+      icon: 'none',
+      duration: 2000
+    });
+    // 清除可能存在的无效结果图片
+    this.setData({
+      resultImagePath: ''
     });
   },
 
@@ -215,11 +249,8 @@ Page({
         });
       },
       fail: (err) => {
-        wx.showToast({
-          title: '保存失败',
-          icon: 'none'
-        });
         console.error('保存失败：', err);
+        this.handleError('保存失败');
       }
     });
   },

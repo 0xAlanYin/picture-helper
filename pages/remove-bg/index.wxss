@@ -36,6 +36,10 @@
 
 .image-wrapper {
   width: 100%;
+  background-color: #f9f9f9;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  box-sizing: border-box;
 }
 
 .image-label {
@@ -43,13 +47,17 @@
   color: #333;
   margin-bottom: 20rpx;
   display: block;
+  text-align: center;
 }
 
 .preview-image {
   width: 100%;
   height: 400rpx;
-  border-radius: 12rpx;
-  background-color: #f9f9f9;
+  border-radius: 8rpx;
+  background-color: #fff;
+}
+
+.result-image {
   background-image: linear-gradient(45deg, #eee 25%, transparent 25%),
     linear-gradient(-45deg, #eee 25%, transparent 25%),
     linear-gradient(45deg, transparent 75%, #eee 75%),
