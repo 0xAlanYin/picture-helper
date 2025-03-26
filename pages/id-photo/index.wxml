@@ -5,8 +5,17 @@
     <view class="subtitle">一键生成标准证件照</view>
   </view>
 
+  <!-- 步骤进度条 -->
+  <view class="steps-progress">
+    <view class="step-dot {{currentStep >= 1 ? 'active' : ''}}"></view>
+    <view class="step-line {{currentStep >= 2 ? 'active' : ''}}"></view>
+    <view class="step-dot {{currentStep >= 2 ? 'active' : ''}}"></view>
+    <view class="step-line {{currentStep >= 3 ? 'active' : ''}}"></view>
+    <view class="step-dot {{currentStep >= 3 ? 'active' : ''}}"></view>
+  </view>
+
   <!-- 步骤 1：选择尺寸 -->
-  <view class="section {{selectedSize ? 'completed' : ''}}">
+  <view class="section {{currentStep === 1 ? 'active' : ''}}" wx:if="{{currentStep === 1}}">
     <view class="step-header">
       <view class="step-number">1</view>
       <view class="section-title">选择证件照尺寸</view>
@@ -34,10 +43,15 @@
         <view class="size-check" wx:if="{{selectedSize === '3'}}">✓</view>
       </view>
     </view>
+    <view class="step-buttons">
+      <button class="next-btn {{!selectedSize ? 'disabled' : ''}}" 
+              bindtap="nextStep" 
+              disabled="{{!selectedSize}}">下一步</button>
+    </view>
   </view>
 
   <!-- 步骤 2：选择背景色 -->
-  <view class="section {{selectedColor ? 'completed' : ''}}">
+  <view class="section {{currentStep === 2 ? 'active' : ''}}" wx:if="{{currentStep === 2}}">
     <view class="step-header">
       <view class="step-number">2</view>
       <view class="section-title">选择背景颜色</view>
@@ -62,10 +76,16 @@
         <view class="color-check" wx:if="{{selectedColor === 'red'}}">✓</view>
       </view>
     </view>
+    <view class="step-buttons">
+      <button class="prev-btn" bindtap="prevStep">上一步</button>
+      <button class="next-btn {{!selectedColor ? 'disabled' : ''}}" 
+              bindtap="nextStep" 
+              disabled="{{!selectedColor}}">下一步</button>
+    </view>
   </view>
 
   <!-- 步骤 3：上传照片 -->
-  <view class="section {{tempImagePath ? 'completed' : ''}}">
+  <view class="section {{currentStep === 3 ? 'active' : ''}}" wx:if="{{currentStep === 3}}">
     <view class="step-header">
       <view class="step-number">3</view>
       <view class="section-title">上传照片</view>
@@ -78,18 +98,17 @@
         <text class="upload-tip">支持从相册选择或拍照</text>
       </view>
     </view>
-  </view>
-
-  <!-- 操作按钮 -->
-  <view class="button-section">
-    <button class="primary-btn {{(!tempImagePath || !selectedSize || !selectedColor) ? 'disabled' : ''}}" 
-            bindtap="processImage" 
-            disabled="{{!tempImagePath || !selectedSize || !selectedColor || isProcessing}}">
-      <view class="btn-content">
-        <text>{{isProcessing ? '处理中...' : '生成证件照'}}</text>
-        <text class="btn-icon" wx:if="{{!isProcessing}}">→</text>
-      </view>
-    </button>
+    <view class="step-buttons">
+      <button class="prev-btn" bindtap="prevStep">上一步</button>
+      <button class="primary-btn {{!tempImagePath ? 'disabled' : ''}}" 
+              bindtap="processImage" 
+              disabled="{{!tempImagePath || isProcessing}}">
+        <view class="btn-content">
+          <text>{{isProcessing ? '处理中...' : '生成证件照'}}</text>
+          <text class="btn-icon" wx:if="{{!isProcessing}}">→</text>
+        </view>
+      </button>
+    </view>
   </view>
 
   <!-- 处理进度 -->

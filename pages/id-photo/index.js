@@ -7,18 +7,19 @@ Page({
    * Page initial data
    */
   data: {
+    currentStep: 1,
     selectedSize: '', // 选中的尺寸
     selectedColor: '', // 选中的背景色
     tempImagePath: '', // 临时图片路径
     resultImagePath: '', // 结果图片路径
     isProcessing: false, // 是否正在处理
     processStep: '', // 处理进度提示
-    sizeConfig: {
-      '1': { width: 25, height: 35, name: '一寸照片' },
-      '2': { width: 35, height: 53, name: '二寸照片' },
-      '3': { width: 33, height: 48, name: '小二寸照片' }
+    photoSizes: {
+      '1': { width: 295, height: 413, name: '一寸' },
+      '2': { width: 413, height: 626, name: '二寸' },
+      '3': { width: 390, height: 567, name: '小二寸' }
     },
-    colorConfig: {
+    bgColors: {
       'white': '#FFFFFF',
       'blue': '#438EDB',
       'red': '#FF0000'
@@ -81,6 +82,30 @@ Page({
 
   },
 
+  // 步骤控制方法
+  nextStep() {
+    const { currentStep, selectedSize, selectedColor } = this.data;
+    
+    // 验证当前步骤是否可以进入下一步
+    if (currentStep === 1 && !selectedSize) return;
+    if (currentStep === 2 && !selectedColor) return;
+    
+    if (currentStep < 3) {
+      this.setData({
+        currentStep: currentStep + 1
+      });
+    }
+  },
+
+  prevStep() {
+    const { currentStep } = this.data;
+    if (currentStep > 1) {
+      this.setData({
+        currentStep: currentStep - 1
+      });
+    }
+  },
+
   // 选择尺寸
   selectSize(e) {
     const size = e.currentTarget.dataset.size
@@ -112,6 +137,24 @@ Page({
     })
   },
 
+  // 重置流程
+  resetProcess() {
+    this.setData({
+      currentStep: 1,
+      selectedSize: '',
+      selectedColor: '',
+      tempImagePath: '',
+      isProcessing: false,
+      processStep: '',
+      resultImagePath: ''
+    });
+  },
+
+  // 重试
+  retryProcess() {
+    this.resetProcess();
+  },
+
   // 更新处理进度
   updateProcessStep(step) {
     this.setData({
@@ -122,19 +165,12 @@ Page({
 
   // 处理图片
   async processImage() {
-    if (!this.data.tempImagePath || !this.data.selectedSize || !this.data.selectedColor) {
-      wx.showToast({
-        title: '请选择尺寸、背景色并上传图片',
-        icon: 'none'
-      })
-      return
-    }
+    if (!this.data.tempImagePath || this.data.isProcessing) return;
 
     this.setData({
       isProcessing: true,
-      processStep: '准备处理图片...',
-      resultImagePath: '' // 清空之前的结果
-    })
+      processStep: '正在处理图片...'
+    });
 
     try {
       // 1. 调用 remove.bg API 抠图
@@ -177,15 +213,6 @@ Page({
         })
       })
     }
-  },
-
-  // 重新生成
-  retryProcess() {
-    this.setData({
-      resultImagePath: ''
-    }, () => {
-      this.processImage()
-    })
   },
 
   // 调用 remove.bg API 抠图
@@ -256,7 +283,7 @@ Page({
   // 裁剪图片
   async cropImage(imagePath) {
     return new Promise((resolve, reject) => {
-      const size = this.data.sizeConfig[this.data.selectedSize]
+      const size = this.data.photoSizes[this.data.selectedSize]
       
       // 获取图片信息
       wx.getImageInfo({
@@ -334,8 +361,8 @@ Page({
   // 合成最终证件照
   async composeImage(imagePath) {
     return new Promise((resolve, reject) => {
-      const size = this.data.sizeConfig[this.data.selectedSize]
-      const bgColor = this.data.colorConfig[this.data.selectedColor]
+      const size = this.data.photoSizes[this.data.selectedSize]
+      const bgColor = this.data.bgColors[this.data.selectedColor]
 
       // 创建 canvas 上下文
       const query = wx.createSelectorQuery()
