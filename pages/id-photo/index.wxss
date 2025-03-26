@@ -1,1 +1,149 @@
 /* pages/id-photo/index.wxss */
+.container {
+  padding: 20rpx;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.section {
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+  color: #333;
+}
+
+/* 尺寸选择样式 */
+.size-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.size-item {
+  padding: 20rpx;
+  border: 2rpx solid #ddd;
+  border-radius: 8rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.size-item.active {
+  border-color: #438edb;
+  background-color: #f0f8ff;
+}
+
+.size-desc {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 背景色选择样式 */
+.color-list {
+  display: flex;
+  gap: 20rpx;
+}
+
+.color-item {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  border: 2rpx solid #ddd;
+}
+
+.color-item.active {
+  border: 4rpx solid #438edb;
+}
+
+/* 上传区域样式 */
+.upload-area {
+  width: 100%;
+  height: 400rpx;
+  background-color: #f8f8f8;
+  border: 2rpx dashed #ddd;
+  border-radius: 8rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #999;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+}
+
+/* 按钮样式 */
+.button-group {
+  margin: 30rpx 0;
+}
+
+.btn {
+  background-color: #438edb;
+  color: #fff;
+  border-radius: 8rpx;
+  font-size: 32rpx;
+  padding: 20rpx 0;
+}
+
+.btn[disabled] {
+  background-color: #ccc;
+}
+
+/* 进度提示样式 */
+.progress-section {
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  text-align: center;
+}
+
+.progress-text {
+  color: #438edb;
+  font-size: 28rpx;
+}
+
+/* 结果预览样式 */
+.result-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.result-image {
+  width: 100%;
+  height: 400rpx;
+  border-radius: 8rpx;
+  background-color: #f8f8f8;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 20rpx;
+  width: 100%;
+}
+
+.save-btn {
+  flex: 1;
+  background-color: #438edb;
+}
+
+.retry-btn {
+  flex: 1;
+  background-color: #666;
+}

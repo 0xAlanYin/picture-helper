@@ -1,2 +1,80 @@
 <!--pages/id-photo/index.wxml-->
-<text>pages/id-photo/index.wxml</text>
+<view class="container">
+  <!-- 尺寸选择 -->
+  <view class="section">
+    <view class="section-title">选择证件照尺寸</view>
+    <view class="size-list">
+      <view class="size-item {{selectedSize === '1' ? 'active' : ''}}" bindtap="selectSize" data-size="1">
+        <text>一寸照片</text>
+        <text class="size-desc">25mm × 35mm</text>
+      </view>
+      <view class="size-item {{selectedSize === '2' ? 'active' : ''}}" bindtap="selectSize" data-size="2">
+        <text>二寸照片</text>
+        <text class="size-desc">35mm × 53mm</text>
+      </view>
+      <view class="size-item {{selectedSize === '3' ? 'active' : ''}}" bindtap="selectSize" data-size="3">
+        <text>小二寸照片</text>
+        <text class="size-desc">33mm × 48mm</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 背景色选择 -->
+  <view class="section">
+    <view class="section-title">选择背景颜色</view>
+    <view class="color-list">
+      <view class="color-item {{selectedColor === 'white' ? 'active' : ''}}" 
+            style="background-color: #FFFFFF;" 
+            bindtap="selectColor" 
+            data-color="white"></view>
+      <view class="color-item {{selectedColor === 'blue' ? 'active' : ''}}" 
+            style="background-color: #438EDB;" 
+            bindtap="selectColor" 
+            data-color="blue"></view>
+      <view class="color-item {{selectedColor === 'red' ? 'active' : ''}}" 
+            style="background-color: #FF0000;" 
+            bindtap="selectColor" 
+            data-color="red"></view>
+    </view>
+  </view>
+
+  <!-- 图片上传 -->
+  <view class="section">
+    <view class="section-title">上传照片</view>
+    <view class="upload-area" bindtap="chooseImage">
+      <image wx:if="{{tempImagePath}}" src="{{tempImagePath}}" mode="aspectFit" class="preview-image"></image>
+      <view wx:else class="upload-placeholder">
+        <text class="iconfont icon-camera"></text>
+        <text>点击上传照片</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="button-group">
+    <button class="btn" bindtap="processImage" disabled="{{!tempImagePath || !selectedSize || !selectedColor || isProcessing}}">
+      {{isProcessing ? '处理中...' : '生成证件照'}}
+    </button>
+  </view>
+
+  <!-- 处理进度 -->
+  <view class="progress-section" wx:if="{{isProcessing}}">
+    <view class="progress-text">{{processStep}}</view>
+  </view>
+
+  <!-- 结果预览 -->
+  <view class="section" wx:if="{{resultImagePath}}">
+    <view class="section-title">证件照预览</view>
+    <view class="result-preview">
+      <image src="{{resultImagePath}}" mode="aspectFit" class="result-image"></image>
+      <view class="action-buttons">
+        <button class="btn save-btn" bindtap="saveImage">保存到相册</button>
+        <button class="btn retry-btn" bindtap="retryProcess">重新生成</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 隐藏的 canvas 元素 -->
+  <canvas type="2d" id="cropCanvas" style="position: fixed; left: -9999px; width: 100px; height: 100px;"></canvas>
+  <canvas type="2d" id="composeCanvas" style="position: fixed; left: -9999px; width: 100px; height: 100px;"></canvas>
+</view>
