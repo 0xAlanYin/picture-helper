@@ -7,11 +7,20 @@
 
   <!-- 步骤进度条 -->
   <view class="steps-progress">
-    <view class="step-dot {{currentStep >= 1 ? 'active' : ''}}"></view>
+    <view class="step-item {{currentStep >= 1 ? 'active' : ''}}">
+      <view class="step-dot"></view>
+      <text class="step-text">选择尺寸</text>
+    </view>
     <view class="step-line {{currentStep >= 2 ? 'active' : ''}}"></view>
-    <view class="step-dot {{currentStep >= 2 ? 'active' : ''}}"></view>
+    <view class="step-item {{currentStep >= 2 ? 'active' : ''}}">
+      <view class="step-dot"></view>
+      <text class="step-text">选择背景</text>
+    </view>
     <view class="step-line {{currentStep >= 3 ? 'active' : ''}}"></view>
-    <view class="step-dot {{currentStep >= 3 ? 'active' : ''}}"></view>
+    <view class="step-item {{currentStep >= 3 ? 'active' : ''}}">
+      <view class="step-dot"></view>
+      <text class="step-text">上传照片</text>
+    </view>
   </view>
 
   <!-- 步骤 1：选择尺寸 -->
