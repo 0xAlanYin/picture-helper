@@ -1,2 +1,28 @@
 <!--pages/recognition/index.wxml-->
-<text>pages/recognition/index.wxml</text>
+<view class="container">
+  <view class="upload-section" bindtap="chooseImage" wx:if="{{!tempImagePath}}">
+    <text class="upload-icon">📤</text>
+    <text class="upload-text">点击上传图片</text>
+  </view>
+
+  <block wx:if="{{tempImagePath}}">
+    <view class="preview-section">
+      <view class="image-wrapper">
+        <text class="image-label">上传图片</text>
+        <image class="preview-image" src="{{tempImagePath}}" mode="aspectFit" show-menu-by-longpress></image>
+      </view>
+    </view>
+
+    <view class="button-group">
+      <button class="btn" type="primary" bindtap="recognizeImage" loading="{{isProcessing}}" disabled="{{isProcessing}}">
+        {{isProcessing ? '识别中...' : '开始识别'}}
+      </button>
+      <button class="btn" bindtap="resetImage">重新选择</button>
+    </view>
+
+    <view class="result-section" wx:if="{{recognitionResult}}">
+      <view class="result-title">识别结果</view>
+      <view class="result-content">{{recognitionResult}}</view>
+    </view>
+  </block>
+</view>
